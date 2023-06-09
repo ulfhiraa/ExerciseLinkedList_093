@@ -7,6 +7,7 @@ public:
 	int rollNumber;
 	string name;
 	Node* next;
+	Node* prev;
 };
 
 class CircularLinkedList {
@@ -17,24 +18,72 @@ public:
 		LAST = NULL;
 	}
 	void addNode();
-	bool search(int rollno, Node** previous, Node** current);
+	bool search(int rollno, Node** ulfah, Node** muhajirah);
 	bool listEmpty();
 	bool delNode();
 	void traverse();
 };
 
-void CircularLinkedList::addNode() { //write your answer here
+void CircularLinkedList::addNode() { //write your answer here, menambah data
+	int rollNo;
+	string nm;
+	cout << "\Enter the roll number : ";
+	cin >> rollNo;
+	cout << "\nEnter the name : ";
+	cin >> nm;
+	Node* newNode = newNode;
+
+	// insert a node in the beginning of a circular-linked list
+	if (LAST == NULL || rollNo <= LAST->rollNumber) { // step 1
+		if (LAST != NULL && rollNo == LAST->rollNumber) { // step 2
+			cout << "\nDuplicate number not allowed" << endl;
+			return;
+		}
+
+		newNode->next = LAST->next; // step 3
+		LAST->next = newNode; // step 4
+
+		return;
+	}
+
+	// insert a Node between two node in the list
+	Node* muhajirah = LAST->next; // step 1
+	Node* ulfah = NULL; // step 2
+	while (LAST != ulfah || newNode > muhajirah) { // step 3
+		ulfah = muhajirah->next;
+	}
+
+	newNode->next = muhajirah->next; // step 4
+	newNode->ulfah = muhajirah; 
+
+	if (muhajirah->next != NULL) // step 5
+	muhajirah->next->ulfah = newNode;
+	muhajirah->next = newNode;
+
+	// insert a node in the end of the list
+	if (LAST != NULL && newNode >= LAST->next) { // step 1
+		if ((LAST == NULL && newNode >= LAST)) { // step 2
+			cout << "\Duplicate number not allowed" << endl;
+			return;
+		}
+
+		newNode->next = LAST->next; // step 3
+		LAST->next = newNode; // step 4
+		LAST = newNode; // step 5
+
+		return;
+	}
 }
 
-bool CircularLinkedList::search(int rollno, Node** previous, Node** current) {
-	*previous = LAST->next;
-	*current = LAST->next;
-	while (*current != LAST) {
-		if (rollno == (*current)->rollNumber) {
+bool CircularLinkedList::search(int rollno, Node** ulfah, Node** muhajirah) { // mencari data
+	*ulfah = LAST->next;
+	*muhajirah = LAST->next;
+	while (*muhajirah != LAST) {
+		if (rollno == (*muhajirah)->rollNumber) {
 			return true;
 		}
-		*previous = *current;
-		*current = (*current)->next;
+		*ulfah = *muhajirah;
+		*muhajirah = (*muhajirah)->next;
 	}
 	if (rollno == LAST->rollNumber) {
 		return true;
@@ -44,11 +93,23 @@ bool CircularLinkedList::search(int rollno, Node** previous, Node** current) {
 	}
 }
 
-bool CircularLinkedList::listEmpty() {
+bool CircularLinkedList::listEmpty() { // memeriksa list kosong 
 	return LAST == NULL;
 }
 
 bool CircularLinkedList::delNode() { //write your answer here
+	if (listEmpty()) {
+		cout << "\nList is empty" << endl;
+	}
+	cout << "\nEnter the roll number of the student whose record is to be deleted : ";
+	int rollNo;
+	cin >> rollNo;
+	cout << endl;
+
+	if (CircularLinkedList::delNode() == false)
+		cout << "Record not found" << endl;
+	else
+		cout << "Record with roll number" << rollNo << "deleted" << endl;
 }
 
 void CircularLinkedList::traverse() {
@@ -57,17 +118,17 @@ void CircularLinkedList::traverse() {
 	}
 	else {
 		cout << "\nRecords in the list are:\n";
-		Node* currentNode = LAST->next;
-		while (currentNode != LAST) {
-			cout << currentNode->rollNumber << " " << currentNode->name << endl;
-			currentNode = currentNode->next;
+		Node* muhajirahNode = LAST->next;
+		while (muhajirahNode != LAST) {
+			cout << muhajirahNode->rollNumber << " " << muhajirahNode->name << endl;
+			muhajirahNode = muhajirahNode->next;
 		}
 		cout << LAST->rollNumber << " " << LAST->name << endl;
 	}
 }
 
-int main() {
-	CircularLinkedList obj;
+int main() { // fungsi utama
+	CircularLinkedList obj; // memanggil method
 	while (true) {
 		try {
 			cout << "\nMenu" << endl;
@@ -76,7 +137,7 @@ int main() {
 			cout << "3. View all the records in the list" << endl;
 			cout << "4. Exit" << endl;
 			cout << "\nEnter your choice (1-5): ";
-			char ch;
+			char ch; // membuat pilihan
 			cin >> ch;
 			switch (ch) {
 			case '1': {
